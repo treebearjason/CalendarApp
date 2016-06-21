@@ -12,15 +12,25 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Document;
+import com.couchbase.lite.Manager;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
+import com.google.gson.Gson;
 import com.jwson.calendarapp.R;
+import com.jwson.calendarapp.couchbase.CouchbaseHelper;
 import com.jwson.calendarapp.domain.UserEvents;
+import com.jwson.common.utils.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class CreateNewEventActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,7 +38,10 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
     private EditText endDateText;
 
     private SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
-    private SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+
+    public static final String DB_NAME = "couchbaseevents";
+    public static final String TAG = "couchbaseevents";
+    Database database = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +55,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         endDateText.setInputType(InputType.TYPE_NULL);
 
         setDateTimeField();
+        initializeDB();
     }
 
     private void setDateTimeField() {
@@ -51,6 +65,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(final View view) {
+        Date defaultDate = DateUtils.clearTime(new Date());
         new SlideDateTimePicker.Builder(getSupportFragmentManager())
                 .setListener(new SlideDateTimeListener() {
                     @Override
@@ -61,10 +76,10 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
                         }
                     }
                 })
-                .setInitialDate(new Date())
+                .setInitialDate(defaultDate)
                         //.setMinDate(minDate)
                         //.setMaxDate(maxDate)
-                        //.setIs24HourTime(true)
+                .setIs24HourTime(true)
                 .setTheme(SlideDateTimePicker.HOLO_DARK)
                 .setIndicatorColor(Color.parseColor("#FF8C00"))
                 .build()
@@ -96,11 +111,44 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         newEvent.setLocationName(locationStr);
         newEvent.setName(eventNameStr);
         newEvent.setIconId(R.drawable.day0);
+        String docId = UUID.randomUUID().toString();
+        newEvent.setId(docId);
+
+        String documentId = writeEventToDB(newEvent);
+
+        Document retrievedDocument = database.getDocument(documentId);
+        Log.d(TAG, "retrievedDocument=" + retrievedDocument.getProperties().toString());
 
         Intent intent = new Intent(CreateNewEventActivity.this, MainActivity.class);
-        intent.putExtra("com.jwson.calendarapp.domain.UserEvents", newEvent);
+        intent.putExtra("com.jwson.calendarapp.domain.UserEvents", documentId);
         startActivity(intent);
         finish();
     }
 
+    private String writeEventToDB(UserEvents event) {
+        // Create a new document and add data
+        Gson gson = new Gson();
+        Document document = database.getDocument(event.getId());
+        String documentId = document.getId();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("result", gson.toJson(event));
+        try {
+            // Save the properties to the document
+            document.putProperties(map);
+        } catch (CouchbaseLiteException e) {
+            Log.e(TAG, "Error putting", e);
+        }
+        return documentId;
+    }
+
+    private void initializeDB() {
+        try {
+            Manager manager = CouchbaseHelper.getInstance().getManager(getApplicationContext());
+            database = CouchbaseHelper.getInstance().getDatabase(manager, DB_NAME);
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting database", e);
+            return;
+        }
+    }
 }
