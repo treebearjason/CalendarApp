@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "70641562155",
+    "firebase_url": "https://calendar-project-7eda2.firebaseio.com",
+    "project_id": "calendar-project-7eda2",
+    "storage_bucket": "calendar-project-7eda2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70641562155:android:d5c14694480b8bdd",
+        "android_client_info": {
+          "package_name": "com.jwson.calendarapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70641562155-mug7tku4g558oc016a1heb8vhon90k17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXKssuucGYrLVLB6oJnpm_JNzE9OjzriE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
