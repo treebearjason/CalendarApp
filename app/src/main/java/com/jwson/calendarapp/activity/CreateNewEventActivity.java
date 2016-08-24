@@ -18,6 +18,8 @@ import com.couchbase.lite.Document;
 import com.couchbase.lite.Manager;
 //import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 //import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
@@ -41,10 +43,6 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 
     private SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
 
-    public static final String DB_NAME = "couchbaseevents";
-    public static final String TAG = "couchbaseevents";
-    Database database = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +55,6 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         endDateText.setInputType(InputType.TYPE_NULL);
 
         setDateTimeField();
-        initializeDB();
     }
 
     private void setDateTimeField() {
@@ -68,24 +65,24 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(final View view) {
         Date defaultDate = DateUtils.clearTime(new Date());
-//        new SlideDateTimePicker.Builder(getSupportFragmentManager())
-//                .setListener(new SlideDateTimeListener() {
-//                    @Override
-//                    public void onDateTimeSet(Date date) {
-//                        if (view instanceof EditText) {
-//                            EditText editText = (EditText) view;
-//                            editText.setText(mFormatter.format(date));
-//                        }
-//                    }
-//                })
-//                .setInitialDate(defaultDate)
-//                        //.setMinDate(minDate)
-//                        //.setMaxDate(maxDate)
-//                .setIs24HourTime(true)
-//                .setTheme(SlideDateTimePicker.HOLO_DARK)
-//                .setIndicatorColor(Color.parseColor("#FF8C00"))
-//                .build()
-//                .show();
+        new SlideDateTimePicker.Builder(getSupportFragmentManager())
+                .setListener(new SlideDateTimeListener() {
+                    @Override
+                    public void onDateTimeSet(Date date) {
+                        if (view instanceof EditText) {
+                            EditText editText = (EditText) view;
+                            editText.setText(mFormatter.format(date));
+                        }
+                    }
+                })
+                .setInitialDate(defaultDate)
+                        //.setMinDate(minDate)
+                        //.setMaxDate(maxDate)
+                .setIs24HourTime(true)
+                .setTheme(SlideDateTimePicker.HOLO_DARK)
+                .setIndicatorColor(Color.parseColor("#FF8C00"))
+                .build()
+                .show();
     }
 
     public void confirmButtonClicked(View view) throws ParseException {
@@ -104,12 +101,13 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         String endDateStr = endDateText.getText().toString();
         String locationStr = location.getText().toString();
 
-//        Date startDate = mFormatter.parse(startDateStr);
-//        Date endDate = mFormatter.parse(endDateStr);
+        Date startDate = mFormatter.parse(startDateStr);
+        Date endDate = mFormatter.parse(endDateStr);
 
         UserEvents newEvent = new UserEvents();
-//        newEvent.setStartDate(startDate);
-//        newEvent.setEndDate(endDate);
+        newEvent.setStartDate(startDate);
+        newEvent.setEndDate(endDate);
+        newEvent.setCreateDate(new Date());
         newEvent.setLocationName(locationStr);
         newEvent.setName(eventNameStr);
         newEvent.setIconId(R.drawable.day0);
@@ -117,9 +115,6 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         newEvent.setId(docId);
 
         writeEventToDB(newEvent);
-
-//        Document retrievedDocument = database.getDocument(documentId);
-//        Log.d(TAG, "retrievedDocument=" + retrievedDocument.getProperties().toString());
 
         Intent intent = new Intent(CreateNewEventActivity.this, MainActivity.class);
 //        intent.putExtra("com.jwson.calendarapp.domain.UserEvents", documentId);
@@ -134,28 +129,5 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 
         myRef.child(event.getId()).setValue(event);
 
-//        Gson gson = new Gson();
-//        Document document = database.getDocument(event.getId());
-//        String documentId = document.getId();
-//        Map<String, Object> map = new HashMap<String, Object>();
-//
-//        map.put("result", gson.toJson(event));
-//        try {
-//            // Save the properties to the document
-//            document.putProperties(map);
-//        } catch (CouchbaseLiteException e) {
-//            Log.e(TAG, "Error putting", e);
-//        }
-//        return documentId;
-    }
-
-    private void initializeDB() {
-        try {
-            Manager manager = CouchbaseHelper.getInstance().getManager(getApplicationContext());
-            database = CouchbaseHelper.getInstance().getDatabase(manager, DB_NAME);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting database", e);
-            return;
-        }
     }
 }

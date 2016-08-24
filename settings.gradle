@@ -1,2 +1,1 @@
-include ':app', ':slideDateTimePicker'
-project(':slideDateTimePicker').projectDir = new File('app/slideDateTimePicker')
+include ':app'
