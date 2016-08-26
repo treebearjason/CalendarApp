@@ -18,8 +18,6 @@ import com.jwson.calendarapp.couchbase.CouchbaseHelper;
 public class MainActivity extends AppCompatActivity {
 
     FragmentPagerAdapter adapterViewPager;
-    public static final String DB_NAME = "couchbaseevents";
-    public static final String TAG = "couchbaseevents";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (count == 0) {
             super.onBackPressed();
-
-
-            try {
-                Manager manager = CouchbaseHelper.getInstance().getManager(this.getApplicationContext());
-                Database database = CouchbaseHelper.getInstance().getDatabase(manager, DB_NAME);
-                database.delete();
-                Log.i(TAG, "Flushed database!");
-            } catch (Exception e) {
-                Log.e(TAG, "Error getting database", e);
-                return;
-            }
 
             moveTaskToBack(true);
             MainActivity.this.finish();
