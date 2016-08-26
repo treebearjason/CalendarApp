@@ -1,10 +1,15 @@
 package com.jwson.calendarapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -31,6 +36,26 @@ public class MainActivity extends AppCompatActivity {
         vpPager.setCurrentItem(1);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                Toast.makeText(getApplicationContext(), "Signing out", Toast.LENGTH_LONG).show();
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -40,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         if (count == 0) {
             super.onBackPressed();
 
-            FirebaseAuth.getInstance().signOut();
+//            FirebaseAuth.getInstance().signOut();
 
             moveTaskToBack(true);
             MainActivity.this.finish();
