@@ -11,6 +11,7 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Manager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.adapter.SwipePageAdapter;
 import com.jwson.calendarapp.couchbase.CouchbaseHelper;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (count == 0) {
             super.onBackPressed();
+
+            FirebaseAuth.getInstance().signOut();
 
             moveTaskToBack(true);
             MainActivity.this.finish();
