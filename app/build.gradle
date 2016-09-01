@@ -41,6 +41,8 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.android.support:design:23.1.0'
     compile 'com.github.jjobes:slideDateTimePicker:1.0.2'
+    compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
+
 
     compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'

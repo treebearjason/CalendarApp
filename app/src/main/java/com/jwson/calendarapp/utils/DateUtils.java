@@ -1,4 +1,4 @@
-package com.jwson.common.utils;
+package com.jwson.calendarapp.utils;
 
 import org.apache.commons.lang3.StringUtils;
 

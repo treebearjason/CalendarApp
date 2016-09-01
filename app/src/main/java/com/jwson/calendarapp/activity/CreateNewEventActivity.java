@@ -1,6 +1,5 @@
 package com.jwson.calendarapp.activity;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -8,29 +7,25 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Document;
-import com.couchbase.lite.Manager;
 //import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 //import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.client.Firebase;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
+import com.google.common.collect.Sets;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
 import com.jwson.calendarapp.R;
-import com.jwson.calendarapp.couchbase.CouchbaseHelper;
 import com.jwson.calendarapp.domain.UserEvents;
-import com.jwson.common.utils.DateUtils;
+import com.jwson.calendarapp.utils.Constants;
+import com.jwson.calendarapp.utils.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +35,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 
     private EditText startDateText;
     private EditText endDateText;
+    private String userId;
 
     private SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
 
@@ -47,6 +43,9 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        Firebase.setAndroidContext(this);
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         startDateText = (EditText) findViewById(R.id.create_start_date);
         startDateText.setInputType(InputType.TYPE_NULL);
@@ -111,6 +110,8 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         newEvent.setLocationName(locationStr);
         newEvent.setName(eventNameStr);
         newEvent.setIconId(R.drawable.day0);
+        newEvent.setAdmins(Sets.newHashSet(userId));
+
         String docId = UUID.randomUUID().toString();
         newEvent.setId(docId);
 
@@ -124,10 +125,19 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 
     private void writeEventToDB(UserEvents event) {
         // Create a new document and add data
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("events");
+        Firebase ref = new Firebase(Constants.FIREBASE_URL);
 
-        myRef.child(event.getId()).setValue(event);
+        Map<String, Object> eventsToUpdate = new HashMap<String, Object>();
+        eventsToUpdate.put("/eventList/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
+        eventsToUpdate.put("/userEvents/" + userId, new ObjectMapper().convertValue(event, Map.class));
+        eventsToUpdate.put("/pendingEvents/" + userId, new ObjectMapper().convertValue(event, Map.class));
+
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference eventListRef = database.getReference("eventList");
+//        DatabaseReference userEventsRef = database.getReference("userEvents");
+//        DatabaseReference pendingEventsRef = database.getReference("pendingEvents");
+
+        ref.updateChildren(eventsToUpdate);
 
     }
 }

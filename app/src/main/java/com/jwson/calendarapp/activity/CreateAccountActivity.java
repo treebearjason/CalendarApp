@@ -15,7 +15,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.jwson.calendarapp.R;
+import com.jwson.calendarapp.domain.User;
+
+import java.util.Date;
+import java.util.UUID;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
@@ -57,7 +63,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String email = inputEmail.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
@@ -90,6 +96,17 @@ public class CreateAccountActivity extends AppCompatActivity {
                                     Toast.makeText(CreateAccountActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
+                                    /**
+                                     * Save user to database
+                                     */
+                                    String userId = UUID.randomUUID().toString();
+                                    User user = new User(email, new Date(), true);
+                                    // Create a new document and add data
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference myRef = database.getReference("users");
+
+                                    myRef.child(userId).setValue(user);
+
                                     startActivity(new Intent(CreateAccountActivity.this, MainActivity.class));
                                     finish();
                                 }

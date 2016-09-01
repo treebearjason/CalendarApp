@@ -1,4 +1,4 @@
-package com.jwson.common.utils;
+package com.jwson.calendarapp.utils;
 
 import com.jwson.calendarapp.BuildConfig;
 
