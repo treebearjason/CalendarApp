@@ -17,9 +17,9 @@ public class UserEvents implements Serializable {
     private String description;
 
     //Dates
-    private Date startDate;
-    private Date endDate;
-    private Date createDate;
+    private Long startDate;
+    private Long endDate;
+    private Long createDate;
 
     //Locations
     private String locationName;
@@ -27,9 +27,9 @@ public class UserEvents implements Serializable {
     private Double locationLatitude;
 
     //Friends IDs
-    private Set<String> admins;
-    private Set<String> confirmedFriends;
-    private Set<String> invitedFriends;
+    private List<String> admins;
+    private List<String> confirmedFriends;
+    private List<String> invitedFriends;
 
     //Misc
     private int iconId;
@@ -62,27 +62,27 @@ public class UserEvents implements Serializable {
         this.description = description;
     }
 
-    public Date getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Long createDate) {
         this.createDate = createDate;
     }
 
@@ -110,29 +110,6 @@ public class UserEvents implements Serializable {
         this.locationLatitude = locationLatitude;
     }
 
-    public Set<String> getAdmins() {
-        return admins;
-    }
-
-    public void setAdmins(Set<String> admins) {
-        this.admins = admins;
-    }
-
-    public Set<String> getConfirmedFriends() {
-        return confirmedFriends;
-    }
-
-    public void setConfirmedFriends(Set<String> confirmedFriends) {
-        this.confirmedFriends = confirmedFriends;
-    }
-
-    public Set<String> getInvitedFriends() {
-        return invitedFriends;
-    }
-
-    public void setInvitedFriends(Set<String> invitedFriends) {
-        this.invitedFriends = invitedFriends;
-    }
 
     public int getIconId() {
         return iconId;
@@ -148,6 +125,30 @@ public class UserEvents implements Serializable {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public List<String> getInvitedFriends() {
+        return invitedFriends;
+    }
+
+    public void setInvitedFriends(List<String> invitedFriends) {
+        this.invitedFriends = invitedFriends;
+    }
+
+    public List<String> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(List<String> admins) {
+        this.admins = admins;
+    }
+
+    public List<String> getConfirmedFriends() {
+        return confirmedFriends;
+    }
+
+    public void setConfirmedFriends(List<String> confirmedFriends) {
+        this.confirmedFriends = confirmedFriends;
     }
 
     @Override

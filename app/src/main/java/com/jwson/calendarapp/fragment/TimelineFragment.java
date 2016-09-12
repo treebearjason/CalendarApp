@@ -3,7 +3,6 @@ package com.jwson.calendarapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,28 +16,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Document;
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.Query;
-import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryRow;
-import com.couchbase.lite.Revision;
-import com.google.gson.Gson;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.activity.CreateNewEventActivity;
 import com.jwson.calendarapp.activity.EventActivity;
-import com.jwson.calendarapp.couchbase.CouchbaseHelper;
 import com.jwson.calendarapp.domain.UserEvents;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 
 public class TimelineFragment extends Fragment implements View.OnClickListener {
@@ -46,10 +38,7 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
     private List<UserEvents> myEvents = new ArrayList<UserEvents>();
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd @HH:mm");
 
-    public static final String DB_NAME = "couchbaseevents";
-    public static final String TAG = "couchbaseevents";
-
-    Database database = null;
+    private DatabaseReference mDatabase;
 
     public static TimelineFragment newInstance() {
         TimelineFragment fragment = new TimelineFragment();
@@ -63,15 +52,8 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (database == null) {
-            try {
-                Manager manager = CouchbaseHelper.getInstance().getManager(getActivity().getApplicationContext());
-                database = CouchbaseHelper.getInstance().getDatabase(manager, DB_NAME);
-            } catch (Exception e) {
-                Log.e(TAG, "Error getting database", e);
-                return;
-            }
-        }
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
@@ -112,19 +94,17 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+        //Delete event
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 UserEvents event = myEvents.get(position);
-                try {
-                    Document doc2Delete = database.getDocument(event.getId());
-                    doc2Delete.delete();
-                    myEvents.remove(position);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getActivity().getApplicationContext(), event.getName() + " has been deleted!", Toast.LENGTH_SHORT).show();
-                } catch (CouchbaseLiteException e) {
-                    e.printStackTrace();
-                }
+
+                //TODO: delete events from database
+//                myEvents.remove(position);
+//                adapter.notifyDataSetChanged();
+                Toast.makeText(getActivity().getApplicationContext(), event.getName() + " has been deleted!", Toast.LENGTH_SHORT).show();
+
                 return false;
             }
         });
@@ -173,55 +153,22 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
     }
 
     private void populateEventList() {
-        Query queryAllDocs = database.createAllDocumentsQuery();
-        QueryEnumerator queryEnumerator = null;
-        Gson gson = new Gson();
-        try {
-            queryEnumerator = queryAllDocs.run();
-
-            for (Iterator<QueryRow> it = queryEnumerator; it.hasNext(); ) {
-                QueryRow row = it.next();
-                Document document = row.getDocument();
-                Log.d(TAG, "document: " + document.getProperties().toString());
-
-                String docObj = (String) document.getProperties().get("result");
-
-                myEvents.add(gson.fromJson(docObj, UserEvents.class));
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Query myEventsQuery = mDatabase.child("userEvents").child(userId);
+        myEventsQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot eventSnapShot : dataSnapshot.getChildren()){
+                    UserEvents event = eventSnapShot.getValue(UserEvents.class);
+                    myEvents.add(event);
+                }
             }
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-        Log.d(TAG, "done looping over all docs ");
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    private void helloCBL() {
-        // Create the document
-        // String documentId = createDocument(database);
-    /* Get and output the contents */
-        // retrieve the document from the database
-//        Document retrievedDocument = database.getDocument(documentId);
-//        Log.d(TAG, "retrievedDocument=" + String.valueOf(retrievedDocument.getProperties()));
-    /* Update the document and add an attachment */
-//        updateDoc(database, documentId);
-//        Log.d(TAG, "retrievedDocument=" + String.valueOf(retrievedDocument.getProperties()));
-        // Add an attachment
-//        addAttachment(database, documentId);
-    /* Get and output the contents with the attachment */
-//        outputContentsWithAttachment(database, documentId);
-    }
-
-    private void updateDoc(Database database, String documentId) {
-        Document document = database.getDocument(documentId);
-        try {
-            // Update the document with more data
-            Map<String, Object> updatedProperties = new HashMap<String, Object>();
-            updatedProperties.putAll(document.getProperties());
-            updatedProperties.put("eventDescription", "Everyone is invited!");
-            updatedProperties.put("address", "123 Elm St.");
-            // Save to the Couchbase local Couchbase Lite DB
-            document.putProperties(updatedProperties);
-        } catch (CouchbaseLiteException e) {
-            Log.e(TAG, "Error putting", e);
-        }
-    }
 }

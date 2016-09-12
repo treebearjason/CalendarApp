@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.Firebase;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -75,8 +76,8 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
                     }
                 })
                 .setInitialDate(defaultDate)
-                        //.setMinDate(minDate)
-                        //.setMaxDate(maxDate)
+                //.setMinDate(minDate)
+                //.setMaxDate(maxDate)
                 .setIs24HourTime(true)
                 .setTheme(SlideDateTimePicker.HOLO_DARK)
                 .setIndicatorColor(Color.parseColor("#FF8C00"))
@@ -104,13 +105,13 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         Date endDate = mFormatter.parse(endDateStr);
 
         UserEvents newEvent = new UserEvents();
-        newEvent.setStartDate(startDate);
-        newEvent.setEndDate(endDate);
-        newEvent.setCreateDate(new Date());
+        newEvent.setStartDate(startDate.getTime());
+        newEvent.setEndDate(endDate.getTime());
+        newEvent.setCreateDate(new Date().getTime());
         newEvent.setLocationName(locationStr);
         newEvent.setName(eventNameStr);
         newEvent.setIconId(R.drawable.day0);
-        newEvent.setAdmins(Sets.newHashSet(userId));
+        newEvent.setAdmins(Lists.<String>newArrayList(userId));
 
         String docId = UUID.randomUUID().toString();
         newEvent.setId(docId);
@@ -129,8 +130,8 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 
         Map<String, Object> eventsToUpdate = new HashMap<String, Object>();
         eventsToUpdate.put("/eventList/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
-        eventsToUpdate.put("/userEvents/" + userId, new ObjectMapper().convertValue(event, Map.class));
-        eventsToUpdate.put("/pendingEvents/" + userId, new ObjectMapper().convertValue(event, Map.class));
+        eventsToUpdate.put("/userEvents/" + userId+ "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
+        eventsToUpdate.put("/pendingEvents/" + userId + "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
 
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference eventListRef = database.getReference("eventList");
