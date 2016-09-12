@@ -16,7 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,10 +30,14 @@ import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.activity.CreateNewEventActivity;
 import com.jwson.calendarapp.activity.EventActivity;
 import com.jwson.calendarapp.domain.UserEvents;
+import com.jwson.calendarapp.utils.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class TimelineFragment extends Fragment implements View.OnClickListener {
@@ -51,9 +58,8 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Firebase.setAndroidContext(getContext());
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
 
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
@@ -101,8 +107,7 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
                 UserEvents event = myEvents.get(position);
 
                 //TODO: delete events from database
-//                myEvents.remove(position);
-//                adapter.notifyDataSetChanged();
+                removeUserEvent(event);
                 Toast.makeText(getActivity().getApplicationContext(), event.getName() + " has been deleted!", Toast.LENGTH_SHORT).show();
 
                 return false;
@@ -142,6 +147,18 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void removeUserEvent(UserEvents event){
+        Firebase ref = new Firebase(Constants.FIREBASE_URL);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Map<String, Object> eventsToUpdate = new HashMap<String, Object>();
+        eventsToUpdate.put("/eventList/" + event.getId(), null);
+        eventsToUpdate.put("/userEvents/" + userId+ "/" + event.getId(), null);
+        eventsToUpdate.put("/pendingEvents/" + userId + "/" + event.getId(), null);
+
+        ref.updateChildren(eventsToUpdate);
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -152,16 +169,33 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
     private void populateEventList() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Query myEventsQuery = mDatabase.child("userEvents").child(userId);
-        myEventsQuery.addValueEventListener(new ValueEventListener() {
+        final Query myEventsQuery = mDatabase.child("userEvents").child(userId).orderByChild("createDate");
+        myEventsQuery.addChildEventListener(new ChildEventListener() {
+
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot eventSnapShot : dataSnapshot.getChildren()){
-                    UserEvents event = eventSnapShot.getValue(UserEvents.class);
-                    myEvents.add(event);
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                UserEvents event = dataSnapshot.getValue(UserEvents.class);
+                myEvents.add(event);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                UserEvents event = dataSnapshot.getValue(UserEvents.class);
+                myEvents.remove(event);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
