@@ -100,7 +100,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                                      * Save user to database
                                      */
 
-                                    User user = new User(email, new Date(), true);
+                                    User user = new User(email, new Date().getTime(), true);
+                                    user.setuId(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                     // Create a new document and add data
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     DatabaseReference myRef = database.getReference("users");

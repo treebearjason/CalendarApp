@@ -36,6 +36,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 
     private EditText startDateText;
     private EditText endDateText;
+    private EditText friendsText;
     private String userId;
 
     private SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
@@ -54,7 +55,20 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         endDateText = (EditText) findViewById(R.id.create_end_date);
         endDateText.setInputType(InputType.TYPE_NULL);
 
+        friendsText = (EditText) findViewById(R.id.create_new_friends);
+
         setDateTimeField();
+        setFriendField();
+    }
+
+    private void setFriendField(){
+        friendsText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateNewEventActivity.this, ShareEventActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setDateTimeField() {

@@ -21,16 +21,14 @@ public class EventActivity extends AppCompatActivity {
         UserEvents event = (UserEvents)getIntent().getSerializableExtra("com.jwson.calendarapp.domain.UserEvents");
 
         TextView eventDate = (TextView) findViewById(R.id.detail_event_date);
-//        String dateStr = df.format(event.getDate());
-//        eventDate.setText(dateStr);
+        String dateStr = df.format(event.getStartDate());
+        eventDate.setText(dateStr);
 
         TextView eventName = (TextView)findViewById(R.id.detail_event_name);
         eventName.setText(event.getName());
 
         TextView eventLocation = (TextView)findViewById(R.id.detail_event_location);
-//        eventLocation.setText(event.getLocation());
-
-
+        eventLocation.setText(event.getLocationName());
     }
 
 

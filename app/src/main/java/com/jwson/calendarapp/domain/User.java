@@ -6,19 +6,28 @@ import java.util.Date;
  * Created by user on 8/29/2016.
  */
 public class User {
+    private String uId;
     private String name;
     private String email;
     private String mobile;
-    private Date createDate;
+    private Long createDate;
     private boolean hasLoggedInWithPassword;
 
     public User() {
     }
 
-    public User(String email, Date createDate, boolean hasLoggedInWithPassword) {
+    public User(String email, Long createDate, boolean hasLoggedInWithPassword) {
         this.email = email;
         this.createDate = createDate;
         this.hasLoggedInWithPassword = hasLoggedInWithPassword;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
     }
 
     public String getName() {
@@ -45,11 +54,11 @@ public class User {
         this.mobile = mobile;
     }
 
-    public Date getCreateDate() {
+    public Long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Long createDate) {
         this.createDate = createDate;
     }
 
