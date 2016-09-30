@@ -106,7 +106,6 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 UserEvents event = myEvents.get(position);
 
-                //TODO: delete events from database
                 removeUserEvent(event);
                 Toast.makeText(getActivity().getApplicationContext(), event.getName() + " has been deleted!", Toast.LENGTH_SHORT).show();
 

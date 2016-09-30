@@ -12,23 +12,18 @@
     android:paddingLeft="@dimen/margin_small"
     android:paddingStart="@dimen/margin_small">
 
-    <ImageView
-        android:id="@+id/iv_user_image"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+    <!--<TextView-->
+        <!--android:id="@+id/user_email"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center_vertical" />-->
 
-    <TextView
-        android:id="@+id/user_email"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_vertical" />
-
-    <ImageButton
+    <CheckBox
         android:id="@+id/button_toggle_share"
-        android:layout_width="@dimen/margin_normal"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/margin_normal"
         android:layout_gravity="center_vertical"
         android:background="@android:color/transparent"
-        android:src="@drawable/icon_add_friend" />
+        android:onClick="onSelectFriend"/>
 </LinearLayout>

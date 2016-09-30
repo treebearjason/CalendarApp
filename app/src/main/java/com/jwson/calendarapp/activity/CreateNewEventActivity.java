@@ -1,5 +1,6 @@
 package com.jwson.calendarapp.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -20,15 +21,21 @@ import com.google.common.collect.Sets;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.domain.UserEvents;
 import com.jwson.calendarapp.utils.Constants;
 import com.jwson.calendarapp.utils.DateUtils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,6 +45,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
     private EditText endDateText;
     private EditText friendsText;
     private String userId;
+    private String [] friendArray;
 
     private SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
 
@@ -66,9 +74,27 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreateNewEventActivity.this, ShareEventActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,600);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (600) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    if(data.getExtras() != null){
+                        Log.v("GG", new Gson().toJson(data.getExtras().getStringArray("friendList")));
+                        friendArray = data.getExtras().getStringArray("friendList");
+                        friendsText.setText(StringUtils.join(friendArray," , "));
+                    }
+
+                }
+                break;
+            }
+        }
     }
 
     private void setDateTimeField() {
@@ -106,6 +132,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         EditText endDateText = (EditText) findViewById(R.id.create_end_date);
 
         EditText location = (EditText) findViewById(R.id.create_new_location);
+        EditText friends = (EditText) findViewById(R.id.create_new_friends);
 
         String message = eventName.getText().toString() + ", " + startDateText.getText().toString() + ", " + location.getText().toString();
         Log.v("Event created", message);
@@ -114,6 +141,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         String startDateStr = startDateText.getText().toString();
         String endDateStr = endDateText.getText().toString();
         String locationStr = location.getText().toString();
+        String friendStr = friends.getText().toString();
 
         Date startDate = mFormatter.parse(startDateStr);
         Date endDate = mFormatter.parse(endDateStr);
@@ -126,6 +154,9 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         newEvent.setName(eventNameStr);
         newEvent.setIconId(R.drawable.day0);
         newEvent.setAdmins(Lists.<String>newArrayList(userId));
+
+        List<String> fdsEmail = new ArrayList<String>(Arrays.asList(friendArray));
+        newEvent.setConfirmedFriends(fdsEmail);
 
         String docId = UUID.randomUUID().toString();
         newEvent.setId(docId);

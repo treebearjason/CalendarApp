@@ -6,6 +6,7 @@ package com.jwson.calendarapp.adapter;
 import android.app.Activity;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -50,9 +51,9 @@ public class FriendAdapter extends FirebaseListAdapter<User> {
      */
     @Override
     protected void populateView(View view, final User friend) {
-        ((TextView) view.findViewById(R.id.user_email)).setText(friend.getEmail());
-        final ImageButton buttonToggleShare = (ImageButton) view.findViewById(R.id.button_toggle_share);
-
+//        ((TextView) view.findViewById(R.id.user_email)).setText(friend.getEmail());
+        final CheckBox buttonToggleShare = (CheckBox) view.findViewById(R.id.button_toggle_share);
+        buttonToggleShare.setText(friend.getEmail());
     }
 
     /**

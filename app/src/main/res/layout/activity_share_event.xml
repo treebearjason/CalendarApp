@@ -1,51 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-tools:context="com.jwson.calendarapp.activity.ShareEventActivity">
-
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/app_bar"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-     />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jwson.calendarapp.activity.ShareEventActivity">
 
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:focusable="true"
-    android:focusableInTouchMode="true" />
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
-<ListView
-    android:id="@+id/list_view_friends_share"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:scrollbars="none" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_small"
-    android:gravity="center"
-    android:orientation="horizontal">
+    <ListView
+        android:id="@+id/list_view_friends_share"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none" />
 
-    <TextView
-        android:id="@+id/tv_add_friend"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Add Friend" />
 
-    <ImageButton
-        android:id="@+id/btn_add_friend"
-        android:layout_width="@dimen/lists_row_height"
-        android:layout_height="@dimen/lists_row_height"
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width='match_parent'
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:background="@android:color/transparent"
-        android:onClick="onAddFriendPressed"
-        android:src="@drawable/icon_add_friend2" />
-</LinearLayout>
+        android:text="Confirm"
+        android:onClick="onConfirmButtonClicked"
+        />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width='match_parent'
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="Cancel"
+        android:onClick="onCancelButtonClicked"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_add_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/lists_row_height"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:onClick="onAddFriendPressed"
+            android:src="@drawable/icon_add_friend2" />
+    </LinearLayout>
 
 </LinearLayout>
