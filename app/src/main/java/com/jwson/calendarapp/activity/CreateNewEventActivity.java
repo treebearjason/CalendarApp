@@ -86,7 +86,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
             case (600) : {
                 if (resultCode == Activity.RESULT_OK) {
                     if(data.getExtras() != null){
-                        Log.v("GG", new Gson().toJson(data.getExtras().getStringArray("friendList")));
+                        Log.v("", new Gson().toJson(data.getExtras().getStringArray("friendList")));
                         friendArray = data.getExtras().getStringArray("friendList");
                         friendsText.setText(StringUtils.join(friendArray," , "));
                     }

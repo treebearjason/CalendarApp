@@ -3,7 +3,6 @@ package com.jwson.calendarapp.adapter;
 /**
  * Created by user on 9/26/2016.
  */
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,38 +10,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
-import com.firebase.ui.FirebaseListAdapter;
 import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.domain.User;
-import com.jwson.calendarapp.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FriendAdapter extends ArrayAdapter<User> {
     private static final String LOG_TAG = FriendAdapter.class.getSimpleName();
 
     private List<User> userList;
+    private List<User> checkedUserList;
 
     public FriendAdapter(Context context,  int textViewResourceId,
                          List<User> userList ){
         super(context,textViewResourceId,userList);
         this.userList = new ArrayList<User>();
         this.userList.addAll(userList);
-
-        System.out.println("=============="+userList.size());    }
+        this.checkedUserList = new ArrayList<User>();
+    }
 
     private class ViewHolder{
         TextView userName;
@@ -71,10 +60,14 @@ public class FriendAdapter extends ArrayAdapter<User> {
                     CheckBox cb = (CheckBox) v ;
                     User user = (User) cb.getTag();
                     Toast.makeText(getContext(),
-                            "Clicked on Checkbox: " + cb.getText() +
+                            "Clicked on Checkbox: " + user.getEmail() +
                                     " is " + cb.isChecked(),
                             Toast.LENGTH_LONG).show();
-                  isChecked[0] = true;
+                    isChecked[0] = true;
+                if (cb.isChecked()){
+                    checkedUserList.add(user);
+                }else
+                    checkedUserList.remove(user);
                 }
             });
 
@@ -86,8 +79,17 @@ public class FriendAdapter extends ArrayAdapter<User> {
         User user = userList.get(position);
         holder.userName.setText(user.getEmail());
         holder.checkBox.setChecked(isChecked[0]);
+        holder.checkBox.setTag(user);
 
         return convertView;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public List<User> getCheckedUserList(){
+        return checkedUserList;
     }
 
 }

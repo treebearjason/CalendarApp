@@ -1,42 +1,29 @@
 package com.jwson.calendarapp.activity;
 
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.adapter.FriendAdapter;
 import com.jwson.calendarapp.domain.User;
-import com.jwson.calendarapp.domain.UserEvents;
 import com.jwson.calendarapp.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
 
 public class ShareEventActivity extends AppCompatActivity {
 
@@ -59,19 +46,15 @@ public class ShareEventActivity extends AppCompatActivity {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         initializeScreen();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     /**
      * Link layout elements from XML and setup the toolbar
      */
     public void initializeScreen() {
-        Firebase currentUserFriendsRef = new Firebase(Constants.FIREBASE_URL_USER_FRIENDS).child(userId);
 
-        currentUserFriendsRef.addValueEventListener(new ValueEventListener() {
+        Firebase currentUserFriendsRef = new Firebase(Constants.FIREBASE_URL_USER_FRIENDS).child(userId);
+        currentUserFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println(dataSnapshot.getKey());
@@ -79,8 +62,9 @@ public class ShareEventActivity extends AppCompatActivity {
                     User user = data.getValue(User.class);
                     userList.add(user);
                     System.out.println("size: " + userList.size());
-                    mFriendAdapter.notifyDataSetChanged();
                 }
+                mFriendAdapter.setUserList(userList);
+                mFriendAdapter.notifyDataSetChanged();
             }
 
 
@@ -91,19 +75,13 @@ public class ShareEventActivity extends AppCompatActivity {
                                 firebaseError.getMessage());
             }
         });
+
         System.out.println("+++++++++++" + userList.size());
         mFriendAdapter = new FriendAdapter(this, R.layout.single_user_item, userList);
 
         /* Set adapter for the listView */
         mListView = (ListView) findViewById(R.id.list_view_friends_share);
         mListView.setAdapter(mFriendAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User user = (User) parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Clicked on Row " + user.getName(), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     /**
@@ -118,9 +96,10 @@ public class ShareEventActivity extends AppCompatActivity {
 
     public void onConfirmButtonClicked(View view) {
         Intent intent = new Intent(ShareEventActivity.this, CreateNewEventActivity.class);
-//        Log.v(LOG_TAG, new Gson().toJson(sharedEmailSet));
+        List<User> checkedList = mFriendAdapter.getCheckedUserList();
+        Log.v(LOG_TAG, new Gson().toJson(checkedList));
 //        intent.putExtra("friendList", sharedEmailSet.toArray(new String[0]));
-//        setResult(Activity.RESULT_OK, intent);
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 
@@ -128,39 +107,13 @@ public class ShareEventActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("ShareEvent Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 }
