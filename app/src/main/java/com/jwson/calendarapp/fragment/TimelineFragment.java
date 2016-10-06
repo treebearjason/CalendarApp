@@ -190,6 +190,7 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 UserEvents event = dataSnapshot.getValue(UserEvents.class);
                 myEvents.remove(event);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
