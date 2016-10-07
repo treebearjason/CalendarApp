@@ -1,11 +1,12 @@
 package com.jwson.calendarapp.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by user on 8/29/2016.
  */
-public class User {
+public class User implements Serializable{
     private String uId;
     private String name;
     private String email;

@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.jwson.calendarapp.R;
+import com.jwson.calendarapp.domain.User;
 import com.jwson.calendarapp.domain.UserEvents;
 import com.jwson.calendarapp.utils.Constants;
 import com.jwson.calendarapp.utils.DateUtils;
@@ -45,7 +46,7 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
     private EditText endDateText;
     private EditText friendsText;
     private String userId;
-    private String [] friendArray;
+    private ArrayList<User> friendArray;
 
     private SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
 
@@ -87,8 +88,12 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
                 if (resultCode == Activity.RESULT_OK) {
                     if(data.getExtras() != null){
                         Log.v("", new Gson().toJson(data.getExtras().getStringArray("friendList")));
-                        friendArray = data.getExtras().getStringArray("friendList");
-                        friendsText.setText(StringUtils.join(friendArray," , "));
+                        friendArray = (ArrayList<User>) data.getSerializableExtra("friendList");
+                        List<String> fdEmails = new ArrayList<>();
+                        for(int i = 0 ; i<friendArray.size(); i ++){
+                            fdEmails.add(friendArray.get(i).getEmail());
+                        }
+                        friendsText.setText(StringUtils.join(fdEmails," , "));
                     }
 
                 }
@@ -155,8 +160,11 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         newEvent.setIconId(R.drawable.day0);
         newEvent.setAdmins(Lists.<String>newArrayList(userId));
 
-        List<String> fdsEmail = new ArrayList<String>(Arrays.asList(friendArray));
-        newEvent.setConfirmedFriends(fdsEmail);
+        List<String> fdsId = new ArrayList<>();
+        for(int i = 0 ; i<friendArray.size(); i ++){
+            fdsId.add(friendArray.get(i).getuId());
+        }
+        newEvent.setConfirmedFriends(fdsId);
 
         String docId = UUID.randomUUID().toString();
         newEvent.setId(docId);
@@ -177,6 +185,12 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         eventsToUpdate.put("/eventList/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
         eventsToUpdate.put("/userEvents/" + userId+ "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
         eventsToUpdate.put("/pendingEvents/" + userId + "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
+
+        //Write to friends' event DB
+        List<String> fdsIds = event.getConfirmedFriends();
+        for(String fdsId : fdsIds){
+            eventsToUpdate.put("/userEvents/" + fdsId + "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
+        }
 
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference eventListRef = database.getReference("eventList");

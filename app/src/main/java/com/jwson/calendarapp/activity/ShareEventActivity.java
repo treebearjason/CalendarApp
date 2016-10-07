@@ -96,9 +96,9 @@ public class ShareEventActivity extends AppCompatActivity {
 
     public void onConfirmButtonClicked(View view) {
         Intent intent = new Intent(ShareEventActivity.this, CreateNewEventActivity.class);
-        List<User> checkedList = mFriendAdapter.getCheckedUserList();
+        ArrayList<User> checkedList = (ArrayList<User>) mFriendAdapter.getCheckedUserList();
         Log.v(LOG_TAG, new Gson().toJson(checkedList));
-//        intent.putExtra("friendList", sharedEmailSet.toArray(new String[0]));
+        intent.putExtra("friendList", checkedList);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
