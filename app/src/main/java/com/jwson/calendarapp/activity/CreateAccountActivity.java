@@ -21,7 +21,7 @@ import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.domain.User;
 
 import java.util.Date;
-import java.util.UUID;
+import com.facebook.FacebookSdk;
 
 public class CreateAccountActivity extends AppCompatActivity {
 

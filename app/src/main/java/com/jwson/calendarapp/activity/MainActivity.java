@@ -1,7 +1,9 @@
 package com.jwson.calendarapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,19 +13,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Document;
-import com.couchbase.lite.Manager;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.adapter.SwipePageAdapter;
-import com.jwson.calendarapp.couchbase.CouchbaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     FragmentPagerAdapter adapterViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

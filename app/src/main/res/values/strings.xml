@@ -10,6 +10,7 @@
 
     <string name="title_activity_event">Event Detail</string>
 
+    <string name="facebook_app_id">1606769949617284</string>
 
     //Color
     <color name="lightgrey">#d3d3d3</color>
