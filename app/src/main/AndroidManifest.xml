@@ -13,7 +13,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".activity.MyApplication">
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name" />
@@ -43,9 +44,9 @@
                 android:value="com.jwson.calendarapp.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.AuthLoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize|stateVisible">
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,17 +58,47 @@
             android:name=".activity.ShareEventActivity"
             android:label="@string/title_activity_share_event">
         </activity>
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
+        <!--<activity android:name="com.facebook.FacebookActivity"-->
+        <!--android:configChanges=-->
+        <!--"keyboard|keyboardHidden|screenLayout|screenSize|orientation"-->
+        <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"-->
+        <!--android:label="@string/app_name" />-->
+        <!--Auth0 Lock-->
+        <activity
+            android:name="com.auth0.lock.sms.LockSMSActivity"
+            android:theme="@style/Lock.Theme"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="treebearjason.auth0.com"
+                    android:pathPrefix="/android/calendarapp/callback"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.auth0.lock.sms.CountryCodeActivity"
+            android:theme="@style/Lock.Theme"/>
+        <!--Auth0 Lock End-->
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.auth0.lock.client-id"
+            android:value="@string/auth0_client_id"/>
+        <meta-data
+            android:name="com.auth0.lock.domain-url"
+            android:value="@string/auth0_domain"/>
 
     </application>
 

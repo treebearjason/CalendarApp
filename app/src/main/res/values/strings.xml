@@ -12,6 +12,9 @@
 
     <string name="facebook_app_id">1606769949617284</string>
 
+    <string name ="auth0_client_id">374EC42dgiPw1BjCX9o7zHZKsFkuqaK0</string>
+    <string name ="auth0_domain">treebearjason.auth0.com</string>
+
     //Color
     <color name="lightgrey">#d3d3d3</color>
     <color name="colorPrimary">#00bcd4</color>

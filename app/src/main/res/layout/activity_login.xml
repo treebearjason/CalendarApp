@@ -76,13 +76,13 @@
             android:textColor="@color/white"
             android:textSize="15dp" />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/facebook_login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dip"
-            />
+        <!--<com.facebook.login.widget.LoginButton-->
+            <!--android:id="@+id/facebook_login_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="10dip"-->
+            <!--/>-->
         <Button
             android:id="@+id/guest_sign_in_button"
             android:layout_width="wrap_content"
