@@ -17,8 +17,14 @@ public class User implements Serializable{
     public User() {
     }
 
-    public User(String email, Long createDate, boolean hasLoggedInWithPassword) {
-        this.email = email;
+//    public User(String email, Long createDate, boolean hasLoggedInWithPassword) {
+//        this.email = email;
+//        this.createDate = createDate;
+//        this.hasLoggedInWithPassword = hasLoggedInWithPassword;
+//    }
+
+    public User(String mobile, Long createDate, boolean hasLoggedInWithPassword) {
+        this.mobile= mobile;
         this.createDate = createDate;
         this.hasLoggedInWithPassword = hasLoggedInWithPassword;
     }

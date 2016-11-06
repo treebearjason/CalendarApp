@@ -27,9 +27,7 @@ import android.widget.Toast;
 //import com.facebook.HttpMethod;
 //import com.facebook.login.LoginResult;
 //import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -86,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         initializeScreen();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+//        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -289,17 +287,17 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Login Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
+//    public Action getIndexApiAction() {
+//        Thing object = new Thing.Builder()
+//                .setName("Login Page") // TODO: Define a title for the content shown.
+//                // TODO: Make sure this auto-generated URL is correct.
+//                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+//                .build();
+//        return new Action.Builder(Action.TYPE_VIEW)
+//                .setObject(object)
+//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+//                .build();
+//    }
 
     @Override
     public void onStart() {
@@ -308,7 +306,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+//        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
@@ -317,7 +315,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+//        AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
 }

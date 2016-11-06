@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.Firebase;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+//import com.google.common.collect.Lists;
+//import com.google.common.collect.Sets;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -158,7 +158,9 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         newEvent.setLocationName(locationStr);
         newEvent.setName(eventNameStr);
         newEvent.setIconId(R.drawable.day0);
-        newEvent.setAdmins(Lists.<String>newArrayList(userId));
+        List<String> uIds = new ArrayList<>();
+        uIds.add(userId);
+        newEvent.setAdmins(uIds);
 
         List<String> fdsId = new ArrayList<>();
         for(int i = 0 ; i<friendArray.size(); i ++){
