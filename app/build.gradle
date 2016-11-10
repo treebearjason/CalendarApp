@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.jwson.calendarapp"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -48,9 +48,8 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
 //    compile 'com.facebook.android:facebook-android-sdk:4.1.0'
-    compile 'com.auth0.android:lock-sms:1.10.+'
-// https://mvnrepository.com/artifact/commons-codec/commons-codec
-    compile group: 'com.firebase', name: 'firebase-token-generator', version: '2.0.0'
+    compile 'com.auth0.android:lock-sms:1.16.+'
+//    compile 'com.auth0.android:lock:1.16.+'
 
 }
 apply plugin: 'com.google.gms.google-services'
