@@ -65,11 +65,11 @@
         <!--android:label="@string/app_name" />-->
         <!--Auth0 Lock-->
         <activity
-            android:name="com.auth0.lock.sms.LockSMSActivity"
-            android:theme="@style/Lock.Theme"
+            android:name="com.auth0.android.lock.PasswordlessLockActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:theme="@style/Lock.Theme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -83,7 +83,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.auth0.lock.sms.CountryCodeActivity"
+            android:name="com.auth0.android.lock.CountryCodeActivity"
             android:theme="@style/Lock.Theme"/>
         <!--Auth0 Lock End-->
 
