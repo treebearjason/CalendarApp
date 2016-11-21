@@ -48,27 +48,13 @@ import java.util.Map;
  * A login screen that offers login via email/password.
  */
 public class AuthLoginActivity extends AppCompatActivity {
-    private Lock lock;
     private PasswordlessLock passwordlessLock;
     private FirebaseAuth mAuth;
 
     private View rootLayout;
-    private RadioGroup groupSubmitMode;
-    private CheckBox checkboxClosable;
     private RadioGroup groupPasswordlessChannel;
-    private RadioGroup groupPasswordlessMode;
-    private CheckBox checkboxConnectionsDB;
-    private CheckBox checkboxConnectionsEnterprise;
-    private CheckBox checkboxConnectionsSocial;
     private CheckBox checkboxConnectionsPasswordless;
-    private RadioGroup groupDefaultDB;
-    private RadioGroup groupSocialStyle;
-    private RadioGroup groupUsernameStyle;
-    private CheckBox checkboxLoginAfterSignUp;
-    private CheckBox checkboxScreenLogIn;
-    private CheckBox checkboxScreenSignUp;
-    private CheckBox checkboxScreenReset;
-    private RadioGroup groupInitialScreen;
+
 
     private static final String TAG = "AuthActivity";
     @Override
@@ -84,49 +70,7 @@ public class AuthLoginActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_auth_login);
-
         rootLayout = findViewById(R.id.scrollView);
-
-        //Basic
-        groupSubmitMode = (RadioGroup) findViewById(R.id.group_submitmode);
-        checkboxClosable = (CheckBox) findViewById(R.id.checkbox_closable);
-
-        checkboxConnectionsDB = (CheckBox) findViewById(R.id.checkbox_connections_db);
-        checkboxConnectionsEnterprise = (CheckBox) findViewById(R.id.checkbox_connections_enterprise);
-        checkboxConnectionsSocial = (CheckBox) findViewById(R.id.checkbox_connections_social);
-        checkboxConnectionsPasswordless = (CheckBox) findViewById(R.id.checkbox_connections_Passwordless);
-
-        groupPasswordlessChannel = (RadioGroup) findViewById(R.id.group_passwordless_channel);
-        groupPasswordlessMode = (RadioGroup) findViewById(R.id.group_passwordless_mode);
-
-        //Advanced
-        groupDefaultDB = (RadioGroup) findViewById(R.id.group_default_db);
-        groupSocialStyle = (RadioGroup) findViewById(R.id.group_social_style);
-        groupUsernameStyle = (RadioGroup) findViewById(R.id.group_username_style);
-        checkboxLoginAfterSignUp = (CheckBox) findViewById(R.id.checkbox_login_after_signup);
-
-        checkboxScreenLogIn = (CheckBox) findViewById(R.id.checkbox_enable_login);
-        checkboxScreenSignUp = (CheckBox) findViewById(R.id.checkbox_enable_signup);
-        checkboxScreenReset = (CheckBox) findViewById(R.id.checkbox_enable_reset);
-        groupInitialScreen = (RadioGroup) findViewById(R.id.group_initial_screen);
-
-        //Buttons
-        final LinearLayout advancedContainer = (LinearLayout) findViewById(R.id.advanced_container);
-        CheckBox checkboxShowAdvanced = (CheckBox) findViewById(R.id.checkbox_show_advanced);
-        checkboxShowAdvanced.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                advancedContainer.setVisibility(b ? View.VISIBLE : View.GONE);
-            }
-        });
-
-        Button btnShowLockClassic = (Button) findViewById(R.id.btn_show_lock_classic);
-        btnShowLockClassic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showClassicLock();
-            }
-        });
 
         Button btnShowLockPasswordless = (Button) findViewById(R.id.btn_show_lock_passwordless);
         btnShowLockPasswordless.setOnClickListener(new View.OnClickListener() {
@@ -137,68 +81,12 @@ public class AuthLoginActivity extends AppCompatActivity {
         });
     }
 
-    private void showClassicLock() {
-        final Lock.Builder builder = Lock.newBuilder(getAccount(), callback);
-        builder.closable(checkboxClosable.isChecked());
-        builder.useLabeledSubmitButton(groupSubmitMode.getCheckedRadioButtonId() == R.id.radio_use_label);
-        builder.loginAfterSignUp(checkboxLoginAfterSignUp.isChecked());
-
-        if (groupSocialStyle.getCheckedRadioButtonId() == R.id.radio_social_style_big) {
-            builder.withAuthButtonSize(AuthButtonSize.BIG);
-        } else if (groupSocialStyle.getCheckedRadioButtonId() == R.id.radio_social_style_small) {
-            builder.withAuthButtonSize(AuthButtonSize.SMALL);
-        }
-
-        if (groupUsernameStyle.getCheckedRadioButtonId() == R.id.radio_username_style_email) {
-            builder.withUsernameStyle(UsernameStyle.EMAIL);
-        } else if (groupUsernameStyle.getCheckedRadioButtonId() == R.id.radio_username_style_username) {
-            builder.withUsernameStyle(UsernameStyle.USERNAME);
-        }
-
-        builder.allowLogIn(checkboxScreenLogIn.isChecked());
-        builder.allowSignUp(checkboxScreenSignUp.isChecked());
-        builder.allowForgotPassword(checkboxScreenReset.isChecked());
-
-        if (groupInitialScreen.getCheckedRadioButtonId() == R.id.radio_initial_reset) {
-            builder.initialScreen(InitialScreen.FORGOT_PASSWORD);
-        } else if (groupInitialScreen.getCheckedRadioButtonId() == R.id.radio_initial_signup) {
-            builder.initialScreen(InitialScreen.SIGN_UP);
-        } else {
-            builder.initialScreen(InitialScreen.LOG_IN);
-        }
-
-        builder.allowedConnections(generateConnections());
-        if (checkboxConnectionsDB.isChecked()) {
-            if (groupDefaultDB.getCheckedRadioButtonId() == R.id.radio_default_db_policy) {
-                builder.setDefaultDatabaseConnection("with-strength");
-            } else if (groupDefaultDB.getCheckedRadioButtonId() == R.id.radio_default_db_mfa) {
-                builder.setDefaultDatabaseConnection("mfa-connection");
-            } else {
-                builder.setDefaultDatabaseConnection("Username-Password-Authentication");
-            }
-        }
-        lock = builder.build(this);
-
-        startActivity(lock.newIntent(this));
-    }
-
 
     private void showPasswordlessLock() {
         final PasswordlessLock.Builder builder = PasswordlessLock.newBuilder(getAccount(), callback);
-        builder.closable(checkboxClosable.isChecked());
-
-        if (groupSocialStyle.getCheckedRadioButtonId() == R.id.radio_social_style_big) {
-            builder.withAuthButtonSize(AuthButtonSize.BIG);
-        } else if (groupSocialStyle.getCheckedRadioButtonId() == R.id.radio_social_style_small) {
-            builder.withAuthButtonSize(AuthButtonSize.SMALL);
-        }
-
-        if (groupPasswordlessMode.getCheckedRadioButtonId() == R.id.radio_use_link) {
-            builder.useLink();
-        } else {
-            builder.useCode();
-        }
-
+        builder.closable(false);
+        builder.withAuthButtonSize(AuthButtonSize.SMALL);
+        builder.useCode();
         builder.allowedConnections(generateConnections());
 
         passwordlessLock = builder.build(this);
@@ -212,23 +100,8 @@ public class AuthLoginActivity extends AppCompatActivity {
 
     private List<String> generateConnections() {
         List<String> connections = new ArrayList<>();
-        if (checkboxConnectionsDB.isChecked()) {
-            connections.add("Username-Password-Authentication");
-            connections.add("mfa-connection");
-            connections.add("with-strength");
-        }
-        if (checkboxConnectionsEnterprise.isChecked()) {
-            connections.add("ad");
-            connections.add("another");
-        }
-        if (checkboxConnectionsSocial.isChecked()) {
-            connections.add("google-oauth2");
-            connections.add("twitter");
-            connections.add("facebook");
-        }
-        if (checkboxConnectionsPasswordless.isChecked()) {
-            connections.add(groupPasswordlessChannel.getCheckedRadioButtonId() == R.id.radio_use_sms ? "sms" : "email");
-        }
+        connections.add("sms");
+
         if (connections.isEmpty()) {
             connections.add("no-connection");
         }
@@ -239,9 +112,6 @@ public class AuthLoginActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (lock != null) {
-            lock.onDestroy(this);
-        }
         if (passwordlessLock != null) {
             passwordlessLock.onDestroy(this);
         }
@@ -276,7 +146,7 @@ public class AuthLoginActivity extends AppCompatActivity {
                 public void onSuccess(Map<String, Object> payload) {
                     Log.d(TAG, new Gson().toJson(payload));
                     mCustomToken = (String)payload.get("id_token");
-
+                    Log.d(TAG, mCustomToken);
                     mAuth.signInWithCustomToken(mCustomToken).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -309,6 +179,7 @@ public class AuthLoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(AuthenticationException error) {
+                    error.printStackTrace();
                 }
             });
 
