@@ -10,25 +10,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.auth0.android.Auth0;
+import com.auth0.android.Auth0Exception;
 import com.auth0.android.authentication.AuthenticationAPIClient;
 import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.authentication.ParameterBuilder;
 import com.auth0.android.callback.BaseCallback;
 import com.auth0.android.lock.AuthButtonSize;
 import com.auth0.android.lock.AuthenticationCallback;
-import com.auth0.android.lock.InitialScreen;
-import com.auth0.android.lock.Lock;
 import com.auth0.android.lock.LockCallback;
 import com.auth0.android.lock.PasswordlessLock;
-import com.auth0.android.lock.UsernameStyle;
 import com.auth0.android.lock.utils.LockException;
+import com.auth0.android.request.ParameterizableRequest;
 import com.auth0.android.result.Credentials;
+import com.auth0.android.result.UserProfile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -47,7 +45,7 @@ import java.util.Map;
 /**
  * A login screen that offers login via email/password.
  */
-public class AuthLoginActivity extends AppCompatActivity {
+public class AuthLoginActivity extends AppCompatActivity{
     private PasswordlessLock passwordlessLock;
     private FirebaseAuth mAuth;
 
@@ -95,7 +93,8 @@ public class AuthLoginActivity extends AppCompatActivity {
     }
 
     private Auth0 getAccount() {
-        return new Auth0(getString(R.string.auth0_client_id), getString(R.string.auth0_domain));
+        Auth0 auth0 = new Auth0(getString(R.string.auth0_client_id), getString(R.string.auth0_domain));
+        return auth0;
     }
 
     private List<String> generateConnections() {
@@ -131,20 +130,41 @@ public class AuthLoginActivity extends AppCompatActivity {
         String idToken = "";
         String apiType = "firebase";
         String mCustomToken = "";
+        String mobile = "";
         @Override
         public void onAuthentication(Credentials credentials) {
             showResult("OK > " + credentials.getIdToken());
             idToken = credentials.getIdToken();
+            Log.i("token", credentials.getAccessToken());
 
+            /**
+             * Get Auth0 User Profile info
+             */
+            AuthenticationAPIClient client = passwordlessLock.getOptions().getAuthenticationAPIClient();
+            client.tokenInfo(idToken).start(new BaseCallback<UserProfile, AuthenticationException>() {
+                @Override
+                public void onSuccess(UserProfile payload) {
+                    mobile = payload.getName();
+                    Log.i("user profile", new Gson().toJson(payload));
+                }
+
+                @Override
+                public void onFailure(AuthenticationException error) {
+                    error.printStackTrace();
+                }
+            });
+
+
+            /**
+             * Build Firebase custom token authentication
+             */
             Map<String, Object> parameters = ParameterBuilder.newBuilder()
                     .set("id_token", idToken)
                     .set("api_type", apiType)
                     .asDictionary();
-            AuthenticationAPIClient client = passwordlessLock.getOptions().getAuthenticationAPIClient();
             client.delegation().addParameters(parameters).start(new BaseCallback<Map<String, Object>, AuthenticationException>() {
                 @Override
                 public void onSuccess(Map<String, Object> payload) {
-                    Log.d(TAG, new Gson().toJson(payload));
                     mCustomToken = (String)payload.get("id_token");
                     Log.d(TAG, mCustomToken);
                     mAuth.signInWithCustomToken(mCustomToken).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -160,7 +180,6 @@ public class AuthLoginActivity extends AppCompatActivity {
                                 /**
                                  * Save user to database
                                  */
-                                String mobile = "1342425" ;
                                 User user = new User(mobile, new Date().getTime(), true);
                                 user.setuId(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                 // Create a new document and add data
@@ -183,8 +202,6 @@ public class AuthLoginActivity extends AppCompatActivity {
                 }
             });
 
-
-
         }
 
         @Override
@@ -197,9 +214,6 @@ public class AuthLoginActivity extends AppCompatActivity {
             showResult(error.getMessage());
         }
     };
-
-
-
 
 }
 
