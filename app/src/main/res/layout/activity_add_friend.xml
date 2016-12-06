@@ -1,21 +1,42 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:fillViewport="true" >
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/app_bar"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-></android.support.v7.widget.Toolbar>
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="Add Friends" />
 
     <ListView
         android:id="@+id/list_view_friends_autocomplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/app_bar"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginTop="10dip"
+        android:background="#B29090" >
+    </ListView>
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:gravity="center_vertical"
+        android:text="Invite Friends to join" />
+
+    <ListView
+        android:id="@+id/list_view_phone_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:background="#4A9C67" >
+    </ListView>
+</LinearLayout>
+
+</ScrollView>

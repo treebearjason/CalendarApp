@@ -77,7 +77,7 @@ public class FriendAdapter extends ArrayAdapter<User> {
             holder = (ViewHolder) convertView.getTag();
         }
         User user = userList.get(position);
-        holder.userName.setText(user.getEmail());
+        holder.userName.setText(user.getMobile());
         holder.checkBox.setChecked(isChecked[0]);
         holder.checkBox.setTag(user);
 

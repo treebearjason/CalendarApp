@@ -44,15 +44,15 @@ public class AutocompleteFriendAdapter extends FirebaseListAdapter<User> {
     @Override
     protected void populateView(View view, final User user) {
          /* Get friends email textview and set it's text to user.email() */
-        TextView textViewFriendEmail = (TextView) view.findViewById(R.id.text_view_autocomplete_item);
-        textViewFriendEmail.setText(user.getEmail());
+        TextView textViewMobile = (TextView) view.findViewById(R.id.text_view_autocomplete_item);
+        textViewMobile.setText(user.getMobile());
 
         /**
          * Set the onClickListener to a single list item
          * If selected email is not friend already and if it is not the
          * current user's email, we add selected user to current user's friends
          */
-        textViewFriendEmail.setOnClickListener(new View.OnClickListener() {
+        textViewMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
