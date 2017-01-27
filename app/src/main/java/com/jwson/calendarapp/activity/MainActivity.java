@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.logout:
-                Toast.makeText(getApplicationContext(), "Signing out", Toast.LENGTH_LONG).show();
-                FirebaseAuth.getInstance().signOut();
+            case R.id.settings:
+//                Toast.makeText(getApplicationContext(), "Signing out", Toast.LENGTH_LONG).show();
+//                FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, AuthLoginActivity.class));
                 return true;
             default:

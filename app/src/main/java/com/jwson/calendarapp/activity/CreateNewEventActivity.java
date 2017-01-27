@@ -89,11 +89,17 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
                     if(data.getExtras() != null){
                         Log.v("", new Gson().toJson(data.getExtras().getStringArray("friendList")));
                         friendArray = (ArrayList<User>) data.getSerializableExtra("friendList");
-                        List<String> fdEmails = new ArrayList<>();
-                        for(int i = 0 ; i<friendArray.size(); i ++){
-                            fdEmails.add(friendArray.get(i).getEmail());
+                        if(friendArray != null){
+                            List<String> fdEmails = new ArrayList<>();
+                            for(int i = 0 ; i<friendArray.size(); i ++){
+                                fdEmails.add(friendArray.get(i).getMobile());
+                                friendsText.setText(StringUtils.join(fdEmails," , "));
+                            }
+                        }else{
+                            friendArray = new ArrayList<>();
+                            friendsText.setText("");
                         }
-                        friendsText.setText(StringUtils.join(fdEmails," , "));
+
                     }
 
                 }
@@ -163,8 +169,10 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         newEvent.setAdmins(uIds);
 
         List<String> fdsId = new ArrayList<>();
-        for(int i = 0 ; i<friendArray.size(); i ++){
-            fdsId.add(friendArray.get(i).getuId());
+        if(friendArray != null){
+            for(int i = 0 ; i<friendArray.size(); i ++){
+                fdsId.add(friendArray.get(i).getuId());
+            }
         }
         newEvent.setConfirmedFriends(fdsId);
 

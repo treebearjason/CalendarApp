@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.auth0.android.Auth0;
@@ -31,6 +32,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
@@ -54,15 +56,16 @@ public class AuthLoginActivity extends AppCompatActivity{
     private CheckBox checkboxConnectionsPasswordless;
 
 
-    private static final String TAG = "AuthActivity";
+    private static final String TAG = "AuthLoginActivity";
     @Override
     @SuppressWarnings("ConstantConditions")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
-            Log.d(TAG, "onAuthStateChanged:signed_in:" + mAuth.getCurrentUser().getUid());
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
             startActivity(new Intent(AuthLoginActivity.this, MainActivity.class));
             finish();
         }
@@ -135,8 +138,7 @@ public class AuthLoginActivity extends AppCompatActivity{
         public void onAuthentication(Credentials credentials) {
             showResult("OK > " + credentials.getIdToken());
             idToken = credentials.getIdToken();
-            Log.i("token", credentials.getAccessToken());
-
+            Log.d(TAG, "ID Token: "+ idToken);
             /**
              * Get Auth0 User Profile info
              */
@@ -187,7 +189,7 @@ public class AuthLoginActivity extends AppCompatActivity{
                                 DatabaseReference myRef = database.getReference("users");
 
                                 myRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
-
+                                Log.d(TAG, "Registration Completed!");
                                 Intent intent = new Intent(AuthLoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -198,6 +200,7 @@ public class AuthLoginActivity extends AppCompatActivity{
 
                 @Override
                 public void onFailure(AuthenticationException error) {
+                    Log.d(TAG,"Cannot login firebase!");
                     error.printStackTrace();
                 }
             });

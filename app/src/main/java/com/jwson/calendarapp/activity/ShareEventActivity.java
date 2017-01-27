@@ -32,7 +32,7 @@ public class ShareEventActivity extends AppCompatActivity {
     private ListView mListView;
     private String userId;
     private List<User> userList = new ArrayList<User>();
-    ;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -97,10 +97,18 @@ public class ShareEventActivity extends AppCompatActivity {
     public void onConfirmButtonClicked(View view) {
         Intent intent = new Intent(ShareEventActivity.this, CreateNewEventActivity.class);
         ArrayList<User> checkedList = (ArrayList<User>) mFriendAdapter.getCheckedUserList();
-        Log.v(LOG_TAG, new Gson().toJson(checkedList));
-        intent.putExtra("friendList", checkedList);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        if(!checkedList.isEmpty()){
+            Log.v(LOG_TAG, new Gson().toJson(checkedList));
+            intent.putExtra("friendList", checkedList);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }else{
+            showErrorToast("At least one friend should be chosen.");
+        }
+    }
+
+    private void showErrorToast(String message) {
+        Toast.makeText(ShareEventActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
     public void onCancelButtonClicked(View view) {

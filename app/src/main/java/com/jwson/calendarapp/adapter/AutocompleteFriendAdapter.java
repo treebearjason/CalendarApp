@@ -109,7 +109,7 @@ public class AutocompleteFriendAdapter extends FirebaseListAdapter<User> {
         if (dataSnapshot.getValue(User.class) != null) {
             /* Toast appropriate error message if the user is already a friend of the user */
             String friendError = String.format("%s is already your friend!",
-                    user.getName());
+                    user.getMobile());
 
             Toast.makeText(mActivity,
                     friendError,

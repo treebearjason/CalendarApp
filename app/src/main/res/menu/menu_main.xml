@@ -3,6 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
     <item
-        android:id="@+id/logout"
-        android:title="Logout" />
+        android:id="@+id/settings"
+        android:title="Settings" />
 </menu>

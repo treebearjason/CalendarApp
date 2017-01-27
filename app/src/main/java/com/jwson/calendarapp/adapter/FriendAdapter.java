@@ -60,7 +60,7 @@ public class FriendAdapter extends ArrayAdapter<User> {
                     CheckBox cb = (CheckBox) v ;
                     User user = (User) cb.getTag();
                     Toast.makeText(getContext(),
-                            "Clicked on Checkbox: " + user.getEmail() +
+                            "Clicked on Checkbox: " + user.getMobile() +
                                     " is " + cb.isChecked(),
                             Toast.LENGTH_LONG).show();
                     isChecked[0] = true;
