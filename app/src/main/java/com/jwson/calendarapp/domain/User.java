@@ -13,6 +13,7 @@ public class User implements Serializable{
     private String mobile;
     private Long createDate;
     private boolean hasLoggedInWithPassword;
+    private String mToken;
 
     public User() {
     }
@@ -55,6 +56,14 @@ public class User implements Serializable{
 
     public String getMobile() {
         return mobile;
+    }
+
+    public String getmToken() {
+        return mToken;
+    }
+
+    public void setmToken(String mToken) {
+        this.mToken = mToken;
     }
 
     public void setMobile(String mobile) {

@@ -184,6 +184,7 @@ public class AuthLoginActivity extends AppCompatActivity{
                                  */
                                 User user = new User(mobile, new Date().getTime(), true);
                                 user.setuId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                user.setmToken(mCustomToken);
                                 // Create a new document and add data
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 DatabaseReference myRef = database.getReference("users");

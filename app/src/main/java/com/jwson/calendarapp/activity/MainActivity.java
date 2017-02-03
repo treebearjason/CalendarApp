@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.settings:
 //                Toast.makeText(getApplicationContext(), "Signing out", Toast.LENGTH_LONG).show();
 //                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, AuthLoginActivity.class));
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
