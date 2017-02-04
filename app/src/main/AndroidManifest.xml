@@ -36,6 +36,14 @@
                 android:value="com.jwson.calendarapp.activity.MainActivity" />
         </activity>
         <activity
+            android:name=".activity.MyAccountActivity"
+            android:label="My Account"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jwson.calendarapp.activity.MainActivity" />
+        </activity>
+        <activity
             android:name=".activity.EventActivity"
             android:label="@string/title_activity_event"
             android:parentActivityName=".activity.MainActivity">

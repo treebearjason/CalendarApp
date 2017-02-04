@@ -130,7 +130,7 @@ public class AuthLoginActivity extends AppCompatActivity{
     }
 
     private LockCallback callback = new AuthenticationCallback() {
-        String idToken = "";
+        String idToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjQwZmRlMWVhNWVmMjA0YmY4YmE5ZThiMTQ1NGM1ZTFmOTEzNDVkNjUifQ.eyJ1aWQiOiJzbXN8NTgxYjRiMDM1MTRjZmY4MjBiODJjYzk5IiwiaWF0IjoxNDg2MTA5MzA3LCJleHAiOjE0ODYxMTI5MDcsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHl0b29sa2l0Lmdvb2dsZWFwaXMuY29tL2dvb2dsZS5pZGVudGl0eS5pZGVudGl0eXRvb2xraXQudjEuSWRlbnRpdHlUb29sa2l0IiwiaXNzIjoiZmlyZWJhc2UtYWRtaW5zZGstNHJtN3ZAY2FsZW5kYXItcHJvamVjdC03ZWRhMi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInN1YiI6ImZpcmViYXNlLWFkbWluc2RrLTRybTd2QGNhbGVuZGFyLXByb2plY3QtN2VkYTIuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ.r4U6CxQnQPD5K7pU6gM-DN7cs3SxRBUt1OQbKmvpmv9uzdq2JUuvqKKC7BIdcknM5z3Le-k6gVt7WzAZnwEkzGs00gTYQM-SwpOdTM7xnTVWighQmE2o3c9ifN6PbNyGLNYkq1nnf74pUi2d7bL1mBZz-Z01HWxSr-CqibcAuddo4-eZKEdUl4bDipILra1WCv-FWuWfbQDY4XAQARtL0ZSWNzvIVvthp69Ory41rkBvDUpAR00JY_jNy5rc_AaprqtNUP6vpQPEGi-8UjOd4ZpKcWuzEFPbYrwn3_FogMG0vSM9PcNU548bMrB3a6WduQaRKO-V1gv5acRyNdwdaQ";
         String apiType = "firebase";
         String mCustomToken = "";
         String mobile = "";
