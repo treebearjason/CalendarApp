@@ -151,11 +151,12 @@ public class AddFriendActivity extends AppCompatActivity {
                                                 }
 
                                                 @Override
-                                                public void onResponse(Call call, Response response) throws IOException {
+                                                public void onResponse(Call call, final Response response) throws IOException {
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            Toast.makeText(getApplicationContext(),"SMS Sent!",Toast.LENGTH_SHORT).show();
+
+                                                            Toast.makeText(getApplicationContext(),response.message(),Toast.LENGTH_SHORT).show();
                                                         }
                                                     });
                                                 }

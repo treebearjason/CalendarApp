@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.jwson.calendarapp.R;
 import com.jwson.calendarapp.activity.CreateNewEventActivity;
 import com.jwson.calendarapp.activity.EventActivity;
+import com.jwson.calendarapp.domain.EventFriend;
 import com.jwson.calendarapp.domain.UserEvents;
 import com.jwson.calendarapp.utils.Constants;
 
@@ -153,6 +154,11 @@ public class TimelineFragment extends Fragment implements View.OnClickListener {
         eventsToUpdate.put("/eventList/" + event.getId(), null);
         eventsToUpdate.put("/userEvents/" + userId+ "/" + event.getId(), null);
         eventsToUpdate.put("/pendingEvents/" + userId + "/" + event.getId(), null);
+
+        List<EventFriend> fds = event.getConfirmedFriends();
+        for(EventFriend fd : fds){
+            eventsToUpdate.put("/userEvents/" + fd.getId() + "/" + event.getId(), null);
+        }
 
         ref.updateChildren(eventsToUpdate);
         adapter.notifyDataSetChanged();

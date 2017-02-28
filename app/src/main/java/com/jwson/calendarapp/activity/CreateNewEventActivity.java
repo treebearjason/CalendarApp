@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 //import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
 //import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.jwson.calendarapp.R;
+import com.jwson.calendarapp.domain.EventFriend;
 import com.jwson.calendarapp.domain.User;
 import com.jwson.calendarapp.domain.UserEvents;
 import com.jwson.calendarapp.utils.Constants;
@@ -152,7 +154,25 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         String startDateStr = startDateText.getText().toString();
         String endDateStr = endDateText.getText().toString();
         String locationStr = location.getText().toString();
-        String friendStr = friends.getText().toString();
+
+
+        if(StringUtils.isEmpty(eventNameStr)){
+            Toast.makeText(this,"Please enter Event Name!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(StringUtils.isEmpty(locationStr)){
+            Toast.makeText(this,"Please enter Location!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(StringUtils.isEmpty(startDateStr)){
+            Toast.makeText(this,"Please enter Event Start Date!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(StringUtils.isEmpty(endDateStr)){
+            Toast.makeText(this,"Please enter Event End Date!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         Date startDate = mFormatter.parse(startDateStr);
         Date endDate = mFormatter.parse(endDateStr);
@@ -168,13 +188,14 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         uIds.add(userId);
         newEvent.setAdmins(uIds);
 
-        List<String> fdsId = new ArrayList<>();
+        List<EventFriend> eventFriends = new ArrayList<>();
         if(friendArray != null){
             for(int i = 0 ; i<friendArray.size(); i ++){
-                fdsId.add(friendArray.get(i).getuId());
+                User friend = friendArray.get(i);
+                eventFriends.add(new EventFriend(friend.getName(),friend.getuId(),friend.getMobile()));
             }
         }
-        newEvent.setConfirmedFriends(fdsId);
+        newEvent.setConfirmedFriends(eventFriends);
 
         String docId = UUID.randomUUID().toString();
         newEvent.setId(docId);
@@ -197,9 +218,9 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
         eventsToUpdate.put("/pendingEvents/" + userId + "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
 
         //Write to friends' event DB
-        List<String> fdsIds = event.getConfirmedFriends();
-        for(String fdsId : fdsIds){
-            eventsToUpdate.put("/userEvents/" + fdsId + "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
+        List<EventFriend> fds = event.getConfirmedFriends();
+        for(EventFriend fd : fds){
+            eventsToUpdate.put("/userEvents/" + fd.getId() + "/" + event.getId(), new ObjectMapper().convertValue(event, Map.class));
         }
 
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -208,6 +229,8 @@ public class CreateNewEventActivity extends AppCompatActivity implements View.On
 //        DatabaseReference pendingEventsRef = database.getReference("pendingEvents");
 
         ref.updateChildren(eventsToUpdate);
-
     }
+
+
+
 }

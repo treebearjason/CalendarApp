@@ -16,6 +16,6 @@ public final class Constants {
     public static final String FIREBASE_URL_USERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_USERS;
     public static final String FIREBASE_URL_USER_FRIENDS = FIREBASE_URL+"/"+ FIREBASE_LOCATION_USERS_FRIENDS;
 
-    public static final String NGROK_URL = "http://87413d22.ngrok.io/sms";
+    public static final String NGROK_URL = "http://58c9c7cb.ngrok.io/sms";
 }
 

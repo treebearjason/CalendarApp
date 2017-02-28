@@ -28,8 +28,8 @@ public class UserEvents implements Serializable {
 
     //Friends IDs
     private List<String> admins;
-    private List<String> confirmedFriends;
-    private List<String> invitedFriends;
+    private List<EventFriend> confirmedFriends;
+    private List<EventFriend> invitedFriends;
 
     //Misc
     private int iconId;
@@ -127,11 +127,11 @@ public class UserEvents implements Serializable {
         this.picUrl = picUrl;
     }
 
-    public List<String> getInvitedFriends() {
+    public List<EventFriend> getInvitedFriends() {
         return invitedFriends;
     }
 
-    public void setInvitedFriends(List<String> invitedFriends) {
+    public void setInvitedFriends(List<EventFriend> invitedFriends) {
         this.invitedFriends = invitedFriends;
     }
 
@@ -143,11 +143,11 @@ public class UserEvents implements Serializable {
         this.admins = admins;
     }
 
-    public List<String> getConfirmedFriends() {
+    public List<EventFriend> getConfirmedFriends() {
         return confirmedFriends;
     }
 
-    public void setConfirmedFriends(List<String> confirmedFriends) {
+    public void setConfirmedFriends(List<EventFriend> confirmedFriends) {
         this.confirmedFriends = confirmedFriends;
     }
 
